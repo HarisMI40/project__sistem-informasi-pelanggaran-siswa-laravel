@@ -1,11 +1,13 @@
-<div>
-    <div class="row">
-        <div class="col-xl-4 form_pencatatan"">
-            <form action="" class="py-3">
+<div class="">
+    <button class="btn btn-primary d-inline d-xl-none rounded-circle tombol-toggle-pencatatan" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        <i class="uil uil-plus font-size-22"></i> 
+      </button>
 
-                <div class="mb-3" wire:ignore>
+    <div class="row">
+        <div wire:ignore class="col-xl-4 form_pencatatan collapse d-xl-block mb-5 mb-xl-0" id="collapseExample">
+            <form action="" class="py-3">
+                <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Siswa</label>
-                    </select>
                     <select class="form-select js-example-basic-single" id="selectSiswa" name="state" id="state">
                         <option value = "0" selected>Pilih Siswa</option>
                             @foreach($this->students as $student)
@@ -41,7 +43,7 @@
             </form>
         </div>
 
-        <div class="mt-5 mt-xl-0 col-xl-8">
+        <div class="col-xl-8">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title"><i class="mdi mdi-format-list-bulleted-square"></i>Pelanggaran Siswa</h4>

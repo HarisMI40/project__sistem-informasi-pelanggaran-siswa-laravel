@@ -6,6 +6,20 @@
             background: #86bae77a;
         }
 
+        .form_pencatatan form label{
+            display : block;
+        }
+
+        .tombol-toggle-pencatatan{
+            position: absolute;
+            bottom: 17vh;
+            z-index: 9999;
+            right: 5vh;
+        }
+        span.select2-container{
+            width: 100% !important;
+        }
+
         @media(min-width : 1200px){
             .form_pencatatan{
                 background: none;
