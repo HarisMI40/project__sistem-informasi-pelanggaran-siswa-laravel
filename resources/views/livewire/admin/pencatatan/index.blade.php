@@ -1,10 +1,10 @@
 <div class="">
-    <button class="btn btn-primary d-inline d-xl-none rounded-circle tombol-toggle-pencatatan" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    <button class="btn btn-primary d-inline d-lg-none rounded-circle tombol-toggle-pencatatan" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
         <i class="uil uil-plus font-size-22"></i> 
       </button>
 
     <div class="row">
-        <div wire:ignore class="col-xl-4 form_pencatatan collapse d-xl-block mb-5 mb-xl-0" id="collapseExample">
+        <div wire:ignore class="col-lg-4 form_pencatatan collapse d-lg-block mb-xl-0 order-1 order-lg-0" id="collapseExample">
             <form action="" class="py-3">
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Siswa</label>
@@ -43,7 +43,7 @@
             </form>
         </div>
 
-        <div class="col-xl-8">
+        <div class="col-lg-8">
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title"><i class="mdi mdi-format-list-bulleted-square"></i>Pelanggaran Siswa</h4>

@@ -3,7 +3,11 @@
 @section('style')
     <style>
         .form_pencatatan{
-            background: #86bae77a;
+            background: #86bae7;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            z-index: 999;
         }
 
         .form_pencatatan form label{
@@ -12,17 +16,23 @@
 
         .tombol-toggle-pencatatan{
             position: absolute;
-            bottom: 17vh;
-            z-index: 9999;
+            bottom: 3vh;
+            z-index: 99999;
             right: 5vh;
         }
         span.select2-container{
             width: 100% !important;
         }
 
-        @media(min-width : 1200px){
+        .table-responsive{
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        @media(min-width : 992px){
             .form_pencatatan{
                 background: none;
+                position: static;
             }
         }
     </style>
