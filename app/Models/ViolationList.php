@@ -102,16 +102,19 @@ class ViolationList extends Model
     {
         $dataPelanggaran = $builder->with('category_pelanggaran')->get()
             ->groupBy('category_pelanggaran.name');
-
-        $dataPelanggaranAdaDuplikat = $dataPelanggaran;
-
+        $dataPelanggaranLama = $dataPelanggaran;
+        $dataPelanggaranDuplikat = []; // [indexDataPelanggaran => dataDuplikat]
 
         // tidak ada data siswa yang duplikat. termasuk jika beda tanggal !
-        foreach ($dataPelanggaranAdaDuplikat as $namaCategory => $dataPelanggaranLoop) {
+        foreach ($dataPelanggaran as $namaCategory => $dataPelanggaranLoop) {
             $dataUnique = $dataPelanggaranLoop->unique('student_id');
+            $dataDuplikat = collect($dataPelanggaranLoop)->duplicates('student_id');
 
+            $dataPelanggaranDuplikat[$namaCategory] = $dataDuplikat;
             $dataPelanggaran[$namaCategory] = $dataUnique;
         }
+
+        // dd($dataPelanggaranDuplikat);
 
         $dataPelanggaranBaru = [];
 
@@ -139,7 +142,9 @@ class ViolationList extends Model
         $dataPelanggaranBaru = collect($dataPelanggaranBaru)->sortByDesc('total_keseluruhan');
 
         return [
-            'dataPelanggaran' => $dataPelanggaranBaru
+            'dataPelanggaranDuplikatOnly' => $dataPelanggaranDuplikat,
+            'dataPelanggaranIncludeDuplikat' => $dataPelanggaranLama,
+            'dataPelanggaran' => $dataPelanggaranBaru // data yang telah di olah (tidak ada data duplikat student_id dari masing masing nama kategori pelanggaran)
         ];
     }
 
