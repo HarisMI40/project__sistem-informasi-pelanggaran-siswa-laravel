@@ -100,31 +100,18 @@ class ViolationList extends Model
 
     function scopeDetailCategoryPelanggaran(Builder $builder, $tahun = null, $bulan = null)
     {
-        // $dataPelanggaran = $builder->join('violation_categories', 'violation_lists.violation_category_id', '=', 'violation_categories.id')
-        //     ->join('class_lists', 'violation_lists.class_id', '=', 'class_lists.id')
-        //     ->groupBy('violation_lists.violation_category_id')
-        //     ->select(
-        //         $builder->raw('DATE(violation_lists.created_at) as tanggal'),
-        //         'violation_categories.name',
-        //         $builder->raw('COUNT(violation_lists.id) as counta'),
-        //         $builder->raw('COUNT(class_lists.id) as kelas')
-        //     )
-        //     ->orderBy('counta', 'desc')
-        //     // ->where('violation_lists.created_at', '>=', $tahun . "-" . $bulan . "-01")
-        //     // ->where('violation_lists.created_at', '<=', $tahun . "-" . $bulan . "-31")
-        //     ->get();
-
         $dataPelanggaran = $builder->with('category_pelanggaran')->get()
             ->groupBy('category_pelanggaran.name');
-        // ->map(function ($item, $key) {
-        //     // $item->data = $item;
-        //     $data = $item;
-        //     $kelasGrup = $item->groupBy('kelas.id');
-        //     $item->kelas_grup = $kelasGrup;
-        //     unset($item);
-        //     return [$key => ['data' => $data, 'kelas_grup' => $kelasGrup]];
-        //     // return $item;
-        // });
+
+        $dataPelanggaranAdaDuplikat = $dataPelanggaran;
+
+
+        // tidak ada data siswa yang duplikat. termasuk jika beda tanggal !
+        foreach ($dataPelanggaranAdaDuplikat as $namaCategory => $dataPelanggaranLoop) {
+            $dataUnique = $dataPelanggaranLoop->unique('student_id');
+
+            $dataPelanggaran[$namaCategory] = $dataUnique;
+        }
 
         $dataPelanggaranBaru = [];
 
@@ -149,14 +136,9 @@ class ViolationList extends Model
             ];
         }
 
-        // $namaNamaPelanggaran = $dataPelanggaran->map(function ($item) {
-        //     return $item->name;
-        // });
-
         $dataPelanggaranBaru = collect($dataPelanggaranBaru)->sortByDesc('total_keseluruhan');
 
         return [
-            // 'namaNamaPelanggaran' => $namaNamaPelanggaran,
             'dataPelanggaran' => $dataPelanggaranBaru
         ];
     }
@@ -220,8 +202,6 @@ class ViolationList extends Model
                 'data' => $dataSetiapKelas
             ]);
         }
-
-        // dd($hasilUntukSeriesGrafik);
 
         return [
             'series_kelas' => $hasilUntukSeriesGrafik,
