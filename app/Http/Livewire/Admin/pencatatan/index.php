@@ -124,7 +124,7 @@ class Index extends Component
 
             $this->resetInput();
 
-            event(new PelanggaranInserted(true));
+            // event(new PelanggaranInserted(true));
 
             $this->alert('success', 'Data berhasil di tambahkan', [
                 'toast' => true,

@@ -13,6 +13,11 @@ use App\Services\AuthService;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CobaImport;
+use Illuminate\Support\Facades\Auth;
+
+Route::get('/', function(){
+    return view('home');
+});
 
 Route::prefix('siswa')->group(function () {
     Route::get('dashboard', function () {

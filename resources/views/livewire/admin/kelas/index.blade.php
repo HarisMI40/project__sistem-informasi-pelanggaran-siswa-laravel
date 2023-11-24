@@ -39,7 +39,9 @@
                             <th scope="col">#</th>
                             <th scope="col">Kelas</th>
                             <th scope="col">Guru</th>
-                            <th scope="col" class="d-flex justify-content-end">Action</th>
+                            @auth('admin')
+                                <th scope="col" class="d-flex justify-content-end">Action</th>
+                            @endauth
                         </tr>
                     </thead>
 
@@ -49,13 +51,15 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->guru->full_name }}</td>
-                                <td class="d-flex justify-content-end gap-1">
+                                @auth('admin')
+                                    <td class="d-flex justify-content-end gap-1">
 
-                                    <button class="btn btn-danger" title="Delete"
-                                        data-delete-id={{ $item->id }}>Delete</button>
-                                    <a href="{{ route('admin.kelas.edit', $item->id) }}"
-                                        class="btn btn-primary">Edit</a>
-                                </td>
+                                        <button class="btn btn-danger" title="Delete"
+                                            data-delete-id={{ $item->id }}>Delete</button>
+                                        <a href="{{ route('admin.kelas.edit', $item->id) }}"
+                                            class="btn btn-primary">Edit</a>
+                                    </td>
+                                @endauth
                             </tr>
                         @endforeach
                     </tbody>
