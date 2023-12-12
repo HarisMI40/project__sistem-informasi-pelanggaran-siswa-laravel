@@ -33,8 +33,8 @@
                         <div class="col-lg-12">
                             <div class="text-center">
                                 <a href="{{ url('/') }}" class="mb-5 d-block auth-logo">
-                                    <img src="{{ asset('assets/images/logo-dark.png') }}" alt="" height="22" class="logo logo-dark">
-                                    <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="22" class="logo logo-light">
+                                    <img src="{{ asset('assets/images/logo_smkmutu.png') }}" alt="" height="240" class="logo logo-dark">
+                                    {{-- <img src="{{ asset('assets/images/logo-light.png') }}" alt="" height="22" class="logo logo-light"> --}}
                                 </a>
                             </div>
                         </div>
