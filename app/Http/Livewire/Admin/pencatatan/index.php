@@ -3,8 +3,10 @@
 namespace App\Http\Livewire\Admin\pencatatan;
 
 use App\Events\PelanggaranInserted;
+use App\Models\Admin;
 use App\Models\ClassList;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\ViolationCategory;
 use App\Models\ViolationLists;
 use Illuminate\Support\Facades\Auth;
@@ -100,10 +102,13 @@ class Index extends Component
         $teacher = Auth::guard('teacher')->check();
         // dd( Auth::guard('admin')->user()->id);
         $report_by = "";
+        $user = "";
 
         if ($admin) {
+            $user = Admin::find(Auth::guard('admin')->user()->id);
             $report_by = "admin";
         } else if ($teacher) {
+            $user = Teacher::find(Auth::guard('teacher')->user()->id);
             $report_by = "teacher";
         }
 
@@ -120,7 +125,8 @@ class Index extends Component
             ];
 
 
-            $newData = ViolationLists::create($data);
+            // $newData = ViolationLists::create($data);
+            $newData = $user->violationLists()->create($data);
 
             $this->resetInput();
 

@@ -71,6 +71,7 @@
                                     <th>Nama</th>
                                     <th>Kelas</th>
                                     <th>Pelanggaran</th>
+                                    <th>Pelapor</th>
                                     <th class="d-none d-lg-block">Point</th>
                                     {{-- <th class="">Status</th> --}}
                                     <th>#</th>
@@ -83,6 +84,7 @@
                                     <td>{{ $value->student->full_name }}</td>
                                     <td>{{ $value->clas }}</td>
                                     <td>{{ $value->jenisPelanggaran->name }}</td>
+                                    <td>{{$value->created_by->username}}</td>
                                     <td class="d-none d-lg-block">{{ $value->jenisPelanggaran->point }}</td>
                                     {{-- <td class=""><span class="badge {{ $value->status === 'confirm' ? 'bg-primary' : ($value->status === 'pending' ? 'bg-warning' : 'bg-danger')}}">{{ $value->status  }}</span></td> --}}
                                     @if((auth()->guard('teacher')->check() && $value->teacher_id == auth()->guard('teacher')->user()->id) or auth()->guard('admin')->check())
