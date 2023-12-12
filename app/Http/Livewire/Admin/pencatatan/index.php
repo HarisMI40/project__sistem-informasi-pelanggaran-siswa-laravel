@@ -115,13 +115,16 @@ class Index extends Component
         // dd( Auth::guard('admin')->user()->id);
         $report_by = "";
         $user = "";
+        $status = "";
         
         if ($admin) {
             $user = Admin::find(Auth::guard('admin')->user()->id);
             $report_by = "admin";
+            $status = "confirm";
         } else if ($teacher) {
             $user = Teacher::find(Auth::guard('teacher')->user()->id);
             $report_by = "teacher";
+            $status = "pending";
         }
         
         try {
@@ -134,7 +137,7 @@ class Index extends Component
                 'photo_proof' => $this->photo->hashName(),
                 "admin_id" => $admin ? Auth::guard('admin')->user()->id : Null,
                 "teacher_id" => $teacher ? Auth::guard('teacher')->user()->id : Null,
-                "status" => "confirm"
+                "status" => $status
             ];
             $this->photo->store('photos');
             
