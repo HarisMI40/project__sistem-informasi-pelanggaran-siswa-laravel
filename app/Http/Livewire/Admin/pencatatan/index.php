@@ -13,15 +13,19 @@ use Illuminate\Support\Facades\Auth;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Exception;
 
+use Livewire\WithFileUploads;
 
 use Livewire\Component;
 
 class Index extends Component
 {
     use LivewireAlert;
+    use WithFileUploads;
+
     public $count = 0, $kelas = "", $students = [], $pelanggarans = [], $pelanggaranSiswa = [], $no = 1;
 
     public $inputKelas, $inputPelanggaran, $inputSiswa, $inputCatatan, $search, $searchKelas;
+    public $photo;
 
     protected $listeners = ['updateSiswa' => 'updateSiswa', 'updatePelanggaran' => 'updatePelanggaran', 'delete' => 'delete', 'searchKelas'];
 
@@ -96,14 +100,22 @@ class Index extends Component
         $this->inputPelanggaran = $value;
     }
 
+    protected $rules = [
+        'inputPelanggaran' => 'required',
+        'inputSiswa' => 'required',
+        'photo' => 'max:5024'
+        // Aturan validasi lainnya...
+    ];
+
     function store()
     {
+        $this->validate();
         $admin = Auth::guard('admin')->check();
         $teacher = Auth::guard('teacher')->check();
         // dd( Auth::guard('admin')->user()->id);
         $report_by = "";
         $user = "";
-
+        
         if ($admin) {
             $user = Admin::find(Auth::guard('admin')->user()->id);
             $report_by = "admin";
@@ -111,7 +123,7 @@ class Index extends Component
             $user = Teacher::find(Auth::guard('teacher')->user()->id);
             $report_by = "teacher";
         }
-
+        
         try {
             $data = [
                 "clas" => $this->inputKelas,
@@ -119,26 +131,25 @@ class Index extends Component
                 "student_id" => $this->inputSiswa,
                 "note" => $this->inputCatatan,
                 "report_by" => $report_by,
+                'photo_proof' => $this->photo->hashName(),
                 "admin_id" => $admin ? Auth::guard('admin')->user()->id : Null,
                 "teacher_id" => $teacher ? Auth::guard('teacher')->user()->id : Null,
                 "status" => "confirm"
             ];
-
-
+            $this->photo->store('photos');
+            
             // $newData = ViolationLists::create($data);
             $newData = $user->violationLists()->create($data);
-
+            
             $this->resetInput();
-
+            
             // event(new PelanggaranInserted(true));
-
             $this->alert('success', 'Data berhasil di tambahkan', [
                 'toast' => true,
                 'position' => 'top-right',
                 'showConfirmButton' => false,
                 'timer' => 3000
             ]);
-
         } catch (Exception $e) {
             dd($e);
         }
