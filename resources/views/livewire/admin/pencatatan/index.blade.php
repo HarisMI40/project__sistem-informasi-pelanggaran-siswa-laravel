@@ -45,16 +45,26 @@
 
 
                 <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Catatan</label>
+                    <label for="exampleFormControlTextarea1" class="form-label">Catatan ( Opsional )</label>
                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Catatan Untuk Siswa" wire:model="inputCatatan"></textarea>
                 </div>
 
-                <div class="mb-3" wire:ignore>
-                    <label for="exampleFormControlInput1" class="form-label">Pelanggaran</label>
-                    <input type="file" wire:model="photo">
+                <div class="form-group mb-3">
+                    <label for="photo" class="form-label">Photo ( Opsional )</label>
+                    <input type="file" wire:model="photo" class="form-control" id="photo">
+
+                    {{-- <div wire:loading wire:target="photo" class="text-info">Mengupload Foto ...</div> --}}
+                    <div wire:loading wire:target="photo" class="text-info mt-2">
+                        <div class="spinner-border text-info spinner-border-sm" role="status">
+                            <span class="sr-only"> Mengupload Foto ...</span>
+                        </div>
+                            Mengupload Foto ...
+                    </div>
                 </div>
+
                 <div class="form-submit" style="display: flex;align-items: center;gap: 10px;">
                     <input type="button" value="Simpan" class="btn btn-primary" wire:click.prevent="store()" wire:loading.attr="disabled" />
+
                     <div wire:loading wire:target="store">
                         <div class="spinner-border text-info" role="status">
                             <span class="sr-only">Loading...</span>

@@ -32,6 +32,7 @@ class Index extends Component
     public function resetInput()
     {
         $this->inputCatatan = "";
+        $this->photo = "";
     }
 
     public function mount()
@@ -88,6 +89,9 @@ class Index extends Component
 
     function updateSiswa($value)
     {
+        if($value == "") {
+           return;
+        };
         $input = explode(",", $value);
 
         $this->inputSiswa = $input[0];
@@ -112,7 +116,8 @@ class Index extends Component
         $this->validate();
         $admin = Auth::guard('admin')->check();
         $teacher = Auth::guard('teacher')->check();
-        // dd( Auth::guard('admin')->user()->id);
+
+
         $report_by = "";
         $user = "";
         $status = "";
@@ -139,7 +144,7 @@ class Index extends Component
                 "teacher_id" => $teacher ? Auth::guard('teacher')->user()->id : Null,
                 "status" => $status
             ];
-            $this->photo->store('photos');
+            $this->photo->store('/public/photos');
             
             // $newData = ViolationLists::create($data);
             $newData = $user->violationLists()->create($data);
