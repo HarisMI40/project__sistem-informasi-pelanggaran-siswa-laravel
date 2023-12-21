@@ -1,17 +1,29 @@
 <div>
     <div class="row">
-        <div class="col-xl-4 form_pencatatan"">
+        <div class="col-xl-4 form_pencatatan">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form action="" class="py-3">
+                
 
                 <div class="mb-3" wire:ignore>
                     <label for="exampleFormControlInput1" class="form-label">Siswa</label>
                     <select class="form-select js-example-basic-single" id="selectSiswa" name="state" id="state">
-                        <option value = "0" selected>Pilih Siswa</option>
+                        <option value = "" selected>Pilih Siswa</option>
                             @foreach($this->students as $student)
                                 <option value="{{$student->id.",".$student->kelas->name}}">{{$student->kelas->name}} - {{$student->full_name}}</option>
                             @endforeach
                         </optgroup>
                     </select>
+
+                    {{-- @error('inputSiswa') <span class="error">{{ $message }}</span> @enderror --}}
 
                 </div>
 
@@ -20,11 +32,12 @@
 
                     @if(count($pelanggarans) > 0)
                         <select class="form-select js-example-basic-single" id="selectPelanggaran">
-                            <option value="0" selected>Pilih Pelanggaran</option>
+                            <option value="" selected>Pilih Pelanggaran</option>
                             @foreach($this->pelanggarans as $pelanggaran)
                                 <option value="{{$pelanggaran->id}}">{{substr($pelanggaran->jenis_pelanggaran, 12)}} - {{$pelanggaran->name}}</option>
                             @endforeach
                         </select>
+                        {{-- @error('inputPelanggaran') <span class="error">{{ $message }}</span> @enderror --}}
                     @else
                         <p>Tidak Ada Data Pelanggaran</p>
                     @endif
@@ -32,11 +45,32 @@
 
 
                 <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Catatan</label>
+                    <label for="exampleFormControlTextarea1" class="form-label">Catatan ( Opsional )</label>
                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Catatan Untuk Siswa" wire:model="inputCatatan"></textarea>
                 </div>
 
-                <input type="button" value="Simpan" class="btn btn-primary" wire:click.prevent="store()" />
+                <div class="form-group mb-3">
+                    <label for="photo" class="form-label">Photo ( Opsional )</label>
+                    <input type="file" wire:model="photo" class="form-control" id="photo">
+
+                    {{-- <div wire:loading wire:target="photo" class="text-info">Mengupload Foto ...</div> --}}
+                    <div wire:loading wire:target="photo" class="text-info mt-2">
+                        <div class="spinner-border text-info spinner-border-sm" role="status">
+                            <span class="sr-only"> Mengupload Foto ...</span>
+                        </div>
+                            Mengupload Foto ...
+                    </div>
+                </div>
+
+                <div class="form-submit" style="display: flex;align-items: center;gap: 10px;">
+                    <input type="button" value="Simpan" class="btn btn-primary" wire:click.prevent="store()" wire:loading.attr="disabled" />
+
+                    <div wire:loading wire:target="store">
+                        <div class="spinner-border text-info" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -71,6 +105,7 @@
                                     <th>Nama</th>
                                     <th>Kelas</th>
                                     <th>Pelanggaran</th>
+                                    <th>Pelapor</th>
                                     <th class="d-none d-lg-block">Point</th>
                                     {{-- <th class="">Status</th> --}}
                                     <th>#</th>
@@ -83,6 +118,7 @@
                                     <td>{{ $value->student->full_name }}</td>
                                     <td>{{ $value->clas }}</td>
                                     <td>{{ $value->jenisPelanggaran->name }}</td>
+                                    <td>{{$value->created_by->username}}</td>
                                     <td class="d-none d-lg-block">{{ $value->jenisPelanggaran->point }}</td>
                                     {{-- <td class=""><span class="badge {{ $value->status === 'confirm' ? 'bg-primary' : ($value->status === 'pending' ? 'bg-warning' : 'bg-danger')}}">{{ $value->status  }}</span></td> --}}
                                     @if((auth()->guard('teacher')->check() && $value->teacher_id == auth()->guard('teacher')->user()->id) or auth()->guard('admin')->check())

@@ -23,6 +23,8 @@ class ViolationLists extends Model
         'photo_proof',
         'report_at',
         'status',
+        'created_by_id',
+        'created_by_type'
     ];
 
     public function student(){
@@ -32,5 +34,9 @@ class ViolationLists extends Model
     public function jenisPelanggaran(){
         return $this->belongsTo(ViolationCategory::class, "violation_category_id", "id")->withTrashed(); //jika ingin data pelanggaran yang sudah di soft delete tetap tampil
         // return $this->belongsTo(ViolationCategory::class, "violation_category_id", "id")->where('deleted_at', '!==', NULL);
+    }
+
+    public function created_by() {
+        return $this->morphTo();
     }
 }

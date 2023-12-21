@@ -24,4 +24,8 @@ class Admin extends Authenticable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function violationLists() {
+        return $this->morphMany(ViolationLists::class, 'created_by');
+    }
 }
