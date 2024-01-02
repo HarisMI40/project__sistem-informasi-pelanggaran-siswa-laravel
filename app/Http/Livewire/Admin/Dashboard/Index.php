@@ -8,13 +8,26 @@ use Livewire\Component;
 
 class Index extends Component
 {
-    public $filterSiswaTeratas, $filterKelasTeratas;
+    public $filterSiswaTeratas, $filterKelasTeratas, $filterGraficCategory, $bulanFilterGraficCategory = true, $tahunFilterGraficCategory = true;
 
-    protected $listeners = ['grafikCoi' => 'loadGrafik'];
+    protected $listeners = ['grafikCoi' => 'loadGrafik', 'onClickCategoryBulan' => 'onClickCategoryBulan', 'onClickCategoryTahun' => 'onClickCategoryTahun'];
 
-    public function loadGrafik($data)
+    function onClickCategoryTahun()
     {
-        $data = ViolationList::getDetailCategoryPelanggaranForGraphic();
+        $this->tahunFilterGraficCategory = !$this->tahunFilterGraficCategory;
+    }
+
+    function onClickCategoryBulan()
+    {
+        $this->bulanFilterGraficCategory = !$this->bulanFilterGraficCategory;
+    }
+
+    public function loadGrafik() // : grafikCategory
+    {
+        $pisah = explode('-', $this->filterGraficCategory);
+        $tahun = $this->tahunFilterGraficCategory ? $pisah[0] : null;
+        $bulan = $this->bulanFilterGraficCategory ? $pisah[1] : null;
+        $data = ViolationList::getDetailCategoryPelanggaranForGraphic($tahun, $bulan);
         $pelanggaran = $data['pelanggaran'];
         $kelas = $data['series_kelas'];
 
@@ -25,7 +38,9 @@ class Index extends Component
     {
         $this->filterSiswaTeratas = date('Y-m');
         $this->filterKelasTeratas = date('Y-m');
+        $this->filterGraficCategory = date('Y-m');
     }
+
     private function siswaTeratas()
     {
         [$tahun, $bulan] = explode('-', $this->filterSiswaTeratas);
@@ -70,6 +85,10 @@ class Index extends Component
             }
         } catch (\DivisionByZeroError $e) {
             $persentaseKenaikanSiswaHarian = 0;
+        }
+
+        if ($this->filterGraficCategory || $this->bulanFilterGraficCategory || $this->tahunFilterGraficCategory) {
+            $this->loadGrafik();
         }
 
         \Log::info(DB::getQueryLog());

@@ -100,8 +100,24 @@ class ViolationList extends Model
 
     function scopeDetailCategoryPelanggaran(Builder $builder, $tahun = null, $bulan = null)
     {
-        $dataPelanggaran = $builder->with('category_pelanggaran')->get()
-            ->groupBy('category_pelanggaran.name');
+        $dataPelanggaran = $tahun && $bulan ?
+            $builder
+                ->whereYear('created_at', '=', $tahun)
+                ->whereMonth('created_at', '=', $bulan)
+                ->with('category_pelanggaran')->get()
+                ->groupBy('category_pelanggaran.name')
+            : ($tahun && !$bulan
+                ? $builder->whereYear('created_at', '=', $tahun)
+                    ->with('category_pelanggaran')->get()
+                    ->groupBy('category_pelanggaran.name')
+                : ($bulan && !$tahun ?
+                    $builder
+                        ->whereMonth('created_at', '=', $bulan)
+                        ->with('category_pelanggaran')->get()
+                        ->groupBy('category_pelanggaran.name')
+                    : $builder->with('category_pelanggaran')->get()
+                        ->groupBy('category_pelanggaran.name')));
+
         $dataPelanggaranLama = $dataPelanggaran;
         $dataPelanggaranDuplikat = []; // [indexDataPelanggaran => dataDuplikat]
 
@@ -148,9 +164,14 @@ class ViolationList extends Model
         ];
     }
 
-    public function scopeGetDetailCategoryPelanggaranForGraphic(Builder $builder)
+    public function scopeGetDetailCategoryPelanggaranForGraphic(Builder $builder, $tahun = null, $bulan = null)
     {
-        $data = $this->detailCategoryPelanggaran()['dataPelanggaran']->map(function ($item) {
+        // if ((!$tahun || $tahun == null) && (!$bulan || $bulan == null)) {
+        //     $tahun = date('Y');
+        //     $bulan = date('m');
+        // }
+
+        $data = $this->detailCategoryPelanggaran($tahun, $bulan)['dataPelanggaran']->map(function ($item) {
             return [
                 'total_keseluruhan' => $item['total_keseluruhan'],
                 'total_kelas' => $item['total_kelas'],

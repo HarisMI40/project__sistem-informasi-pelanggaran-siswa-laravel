@@ -267,12 +267,37 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="float-end">
-                            <div class="dropdown">
-                                <input class="form-control form-control-sm" type="date" value="{{ date('Y-m-d') }}"
-                                    id="month-input">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="container-fluid d-flex align-items-center justify-content-center">
+                                            <span class="form-check me-2">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    id="tahun" checked>
+                                                <label class="form-check-label" for="tahun">
+                                                    Tahun
+                                                </label>
+                                            </span>
+                                            <span class="form-check">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    id="bulan" checked>
+                                                <label class="form-check-label" wire:click="$emit('onClickCategoryBulan')"
+                                                    for="bulan">
+                                                    Bulan
+                                                </label>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 mb-3">
+                                        <input class="form-control form-control-sm" type="month"
+                                            wire:model='filterGraficCategory' id="month-input">
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
-                        <h4 class="card-title mb-4">Pelanggaran</h4>
+                        <h4 class="card-title mb-4 d-none d-sm-block">Pelanggaran</h4>
 
                         <div class="mt-1">
                             <ul class="list-inline main-chart mb-0">
@@ -498,10 +523,10 @@
 
             Livewire.on('getDataCategoryPelanggaran', (dataValues) => {
                 var options, chart;
-                console.log('ke trigger');
                 const dataJson = JSON.parse(dataValues);
                 const data = dataJson.pelanggaran;
                 const dataKelas = dataJson.kelas;
+                console.log('data[0]', data[0])
                 var LinechartsalesColors = getChartColorsArray("sales-analytics-chart");
                 if (LinechartsalesColors) {
                     // options = {
@@ -664,7 +689,6 @@
                         },
                         xaxis: {
                             categories: data[0],
-
                         },
                         yaxis: {
                             title: {
@@ -681,6 +705,19 @@
                         fill: {
                             opacity: 1
                         },
+                        dataLabels: {
+                            enabled: true,
+                            formatter: (_val, opt) => {
+                                let series = opt.w.config.series;
+                                let idx = opt.dataPointIndex;
+                                const total = series.reduce((total, self) => total + self.data[idx], 0);
+
+                                return total - (total / 2);
+                            },
+                            style: {
+                                color: ['#000']
+                            }
+                        },
                         legend: {
                             position: 'top',
                             horizontalAlign: 'left',
@@ -693,7 +730,7 @@
             })
 
             $(document).ready(function() {
-                Livewire.emit('grafikCoi', true);
+                Livewire.emit('grafikCoi');
             });
         </script>
     @endauth

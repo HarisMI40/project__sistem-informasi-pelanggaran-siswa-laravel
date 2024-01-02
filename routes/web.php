@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CobaImport;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function(){
+Route::get('/', function () {
     return view('home');
 });
 
